@@ -1,75 +1,76 @@
 package com.qualityhouse.course.automation.structuredscripting.tests;
 
-import com.qualityhouse.course.automation.structuredscripting.pageobjects.CommonPageObjects;
-import com.qualityhouse.course.automation.structuredscripting.pageobjects.LoginPageObject;
+import com.qualityhouse.course.automation.structuredscripting.library.CommonLib;
+import com.qualityhouse.course.automation.structuredscripting.library.LoginLib;
 import org.junit.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Login {
 
-    WebDriver driver = new ChromeDriver();
-
-    private LoginPageObject loginPage = new LoginPageObject(driver);
-
-    CommonPageObjects common = new CommonPageObjects(driver);
+    private WebDriver driver;
 
     @Before
-    public void setup() {
-        common.openApplication();
+    public void startUp() {
+        driver = CommonLib.openBrowser();
+
+        CommonLib.navigateToApp(driver);
     }
 
     @After
     public void tearDown() {
-        driver.close();
+        CommonLib.closeBrowser(driver);
     }
 
     @Test
-    public void tcLoginUser1() {
-        loginPage.open();
+    public void tcLoginUser1 () {
+        LoginLib.navigateToLoginPage(driver);
 
-        loginPage.populateUsername("student1");
+        LoginLib.loginAsUser(driver, "student1", "stpass1");
 
-        loginPage.populatePassword("stpass1");
+        CommonLib.logoutFromApp(driver);
 
-        loginPage.login();
-
-        common.logout();
+        Assert.assertEquals("User is not logged out.", true, driver.findElement(By.cssSelector("a[href='index.php?page=login']")).isDisplayed());
     }
 
     @Test
-    public void tcLoginUser2() {
-        loginPage.open();
+    public void tcLoginUser2 () {
+        LoginLib.navigateToLoginPage(driver);
 
-        loginPage.populateUsername("student2");
+        LoginLib.loginAsUser(driver, "student2", "stpass2");
 
-        loginPage.populatePassword("stpass2");
+        CommonLib.logoutFromApp(driver);
 
-        loginPage.login();
-
-        common.logout();
+        Assert.assertEquals("User is not logged out.", true, driver.findElement(By.cssSelector("a[href='index.php?page=login']")).isDisplayed());
     }
 
     @Test
-    public void tcLoginUser3() {
-        loginPage.open();
+    public void tcLoginUser3 () {
+        LoginLib.navigateToLoginPage(driver);
 
-        loginPage.populateUsername("student3");
+        LoginLib.loginAsUser(driver, "student3", "stpass3");
 
-        loginPage.populatePassword("stpass3");
+        CommonLib.logoutFromApp(driver);
 
-        loginPage.login();
-
-        common.logout();
+        Assert.assertEquals("User is not logged out.", true, driver.findElement(By.cssSelector("a[href='index.php?page=login']")).isDisplayed());
     }
 
     @Test
     public void tcTooManyUnsuccessfulLogins() {
-        // todo: Exercise no. 1 - check if consecutive unsuccessful log in attempts raise warning
+        LoginLib.navigateToLoginPage(driver);
+
+        LoginLib.loginAsUser(driver, "student1", "wrong");
+
+        LoginLib.loginAsUser(driver, "student1", "wrong");
+
+        LoginLib.loginAsUser(driver, "student1", "wrong_again");
+
+        Assert.assertEquals("Warning message is not displayed.", true, driver.findElement(By.cssSelector("b.err")).isDisplayed());
     }
 
     @Test
     public void tcLoginWithSeveralUsers() {
-        // todo: Exercise no. 2 - perform login (and logout) of three users (student1, student2, student3), sequentially
+        // todo: Exercise no. 1 - perform login (and logout) of three users (student1, student2, student3), sequentially
     }
+
 }
