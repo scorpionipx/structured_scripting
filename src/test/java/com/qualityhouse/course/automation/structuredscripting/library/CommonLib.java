@@ -7,7 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class CommonLib {
 
-    private static final String applicationURL = "http://acme.qualityhouse.bg/build3/index.php";
+    private static final String applicationURL = "https://acme.qualityhouse.com/build3/index.php";
 
     private final static Logger logger = Logger.getLogger(LoginLib.class);
 
